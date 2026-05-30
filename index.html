@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRRIS — Reporte Diario de Caja — Mayo 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0F0F1A;
+  --card: #1A1A2E;
+  --border: #2D2D44;
+  --accent: #FF6B35;
+  --green: #10B981;
+  --red: #EF4444;
+  --blue: #3B82F6;
+  --text: #E8E8F0;
+  --text-muted: #8888A8;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(255,107,53,0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(59,130,246,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes growBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,107,53,0); }
+  50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(255,107,53,0.08); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes donutFill {
+  from { stroke-dashoffset: var(--circumference); }
+  to { stroke-dashoffset: var(--offset); }
+}
+
+@keyframes floatUp {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.anim-slide {
+  animation: slideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-fade {
+  animation: fadeIn 0.8s ease both;
+}
+
+.anim-pulse {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* ========== HEADER ========== */
+.header {
+  text-align: center;
+  padding: 2.5rem 0 3rem;
+  animation: slideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.brand {
+  font-family: var(--font-heading);
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.header-sub {
+  font-family: var(--font-heading);
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.header-date {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+}
+
+.header-line {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  margin: 1.2rem auto 0;
+  border-radius: 2px;
+}
+
+/* ========== KPI CARDS ========== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.8rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+}
+
+.kpi-card:nth-child(1)::before { background: var(--accent); }
+.kpi-card:nth-child(2)::before { background: var(--blue); }
+.kpi-card:nth-child(3)::before { background: var(--green); }
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.kpi-card:nth-child(1) { animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s both, pulse 3s ease-in-out 1.5s infinite; }
+.kpi-card:nth-child(2) { animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.2s both, pulse 3s ease-in-out 2s infinite; }
+.kpi-card:nth-child(3) { animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s both, pulse 3s ease-in-out 2.5s infinite; }
+
+.kpi-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.kpi-value {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.kpi-compare {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.kpi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.kpi-badge.green {
+  background: rgba(16,185,129,0.15);
+  color: var(--green);
+}
+
+.kpi-badge.red {
+  background: rgba(239,68,68,0.15);
+  color: var(--red);
+}
+
+/* ========== SECTION TITLES ========== */
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.section-title .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+
+/* ========== BAR CHART ========== */
+.chart-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.4s both;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.bars-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 260px;
+  padding-top: 10px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+  min-width: 0;
+}
+
+.bar {
+  width: 100%;
+  max-width: 38px;
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom;
+  transform: scaleY(0);
+  transition: transform 0.1s;
+  position: relative;
+  cursor: pointer;
+  min-height: 2px;
+}
+
+.bar:hover {
+  filter: brightness(1.25);
+}
+
+.bar:hover::after {
+  content: attr(data-value);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 10;
+  animation: floatUp 0.2s ease both;
+}
+
+.bar-label {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  text-align: center;
+  letter-spacing: -0.3px;
+}
+
+/* ========== COMPARISON PANEL ========== */
+.compare-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.compare-col {
+  text-align: center;
+}
+
+.compare-col h3 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.compare-col.mayo h3 { color: var(--accent); }
+.compare-col.abril h3 { color: var(--text-muted); }
+
+.compare-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(45,45,68,0.3);
+}
+
+.compare-row:last-child { border-bottom: none; }
+
+.compare-row .label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.compare-row .val {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.compare-col.mayo .val { color: var(--text); }
+.compare-col.abril .val { color: var(--text-muted); }
+
+.compare-vs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.compare-vs-divider {
+  width: 1px;
+  height: 100%;
+  min-height: 80px;
+  background: var(--border);
+}
+
+.compare-vs-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--green);
+  margin: 0.4rem 0;
+  white-space: nowrap;
+}
+
+/* ========== ZONE BREAKDOWN ========== */
+.zone-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.6s both;
+}
+
+.zone-content {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+}
+
+.donut-wrap {
+  flex-shrink: 0;
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.donut-wrap svg {
+  transform: rotate(-90deg);
+  width: 200px;
+  height: 200px;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.donut-center .total {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.donut-center .sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.zone-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.zone-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: fadeIn 0.5s ease both;
+}
+
+.zone-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.zone-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+}
+
+.zone-amount {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.zone-pct {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  width: 40px;
+  text-align: right;
+}
+
+.zone-bar-bg {
+  flex: 1;
+  max-width: 120px;
+  height: 6px;
+  background: rgba(45,45,68,0.5);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.zone-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transform-origin: left;
+  animation: growBar 1s cubic-bezier(0.22,1,0.36,1) 0.8s both;
+}
+
+/* ========== INSIGHT CARDS ========== */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.insight-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.insight-card:hover { transform: translateY(-3px); }
+
+.insight-card:nth-child(1) { animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.7s both; }
+.insight-card:nth-child(2) { animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.8s both; }
+.insight-card:nth-child(3) { animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.9s both; }
+
+.insight-icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.insight-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.insight-value {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.insight-detail {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+}
+
+/* ========== STACKED BAR ========== */
+.stacked-bar-wrap {
+  margin-top: 1.25rem;
+}
+
+.stacked-bar {
+  display: flex;
+  height: 28px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.stacked-segment {
+  height: 100%;
+  transform-origin: left;
+  animation: growBar 1.2s cubic-bezier(0.22,1,0.36,1) both;
+  position: relative;
+}
+
+.stacked-segment:hover { filter: brightness(1.15); }
+
+/* ========== FOOTER ========== */
+.footer {
+  text-align: center;
+  padding: 2.5rem 0 1.5rem;
+  animation: fadeIn 0.8s ease 1s both;
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+}
+
+.footer-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.footer-text .sep { margin: 0 0.5rem; opacity: 0.3; }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .insights-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .compare-vs { flex-direction: row; justify-content: center; }
+  .compare-vs-divider { width: 100%; height: 1px; min-height: unset; }
+  .zone-content { flex-direction: column; }
+  .donut-wrap { margin: 0 auto; }
+  .bars-container { height: 180px; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 1rem; }
+  .header { padding: 1.5rem 0 2rem; }
+  .brand { letter-spacing: 3px; }
+  .kpi-card { padding: 1.2rem 1rem; }
+  .bars-container { height: 150px; gap: 2px; }
+  .bar { max-width: 20px; }
+  .bar-label { font-size: 0.5rem; }
+  .chart-section { padding: 1.2rem 1rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">M<span>I</span>RRIS</div>
+    <div class="header-sub">Reporte Diario de Caja — Mayo 2026</div>
+    <div class="header-date">Actualizado: 28 de Mayo, 2026</div>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card anim-pulse">
+      <div class="kpi-label">Clientes</div>
+      <div class="kpi-value"><span class="counter" data-target="23149">0</span></div>
+      <div class="kpi-compare">
+        <span>vs 17,470 Abril</span>
+        <span class="kpi-badge green">▲ +32.5%</span>
+      </div>
+    </div>
+    <div class="kpi-card anim-pulse">
+      <div class="kpi-label">Tiquete Prom.</div>
+      <div class="kpi-value">$<span class="counter" data-target="286190">0</span></div>
+      <div class="kpi-compare">
+        <span>vs $281,536 Abril</span>
+        <span class="kpi-badge green">▲ +1.7%</span>
+      </div>
+    </div>
+    <div class="kpi-card anim-pulse">
+      <div class="kpi-label">Venta Bruta</div>
+      <div class="kpi-value">$<span class="counter" data-target="3420" data-suffix="M" data-format="comma">0</span></div>
+      <div class="kpi-compare">
+        <span>vs $2,703M Abril</span>
+        <span class="kpi-badge green">▲ +26.5%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY BAR CHART -->
+  <div class="chart-section">
+    <div class="section-title"><span class="dot"></span> Venta Diaria — Mayo 2026</div>
+    <div class="chart-legend">
+      <span><span class="legend-dot" style="background:#FF6B35"></span> Vie / Sáb</span>
+      <span><span class="legend-dot" style="background:#3B82F6"></span> Otros días</span>
+    </div>
+    <div class="bars-container" id="barsContainer"></div>
+  </div>
+
+  <!-- COMPARISON PANEL -->
+  <div class="compare-section">
+    <div class="section-title"><span class="dot"></span> Comparativa Mayo vs Abril</div>
+    <div class="compare-grid">
+      <div class="compare-col mayo">
+        <span class="accent-dot" style="display:inline-block;width:8px;height:8px;background:#FF6B35;border-radius:50%;margin-right:8px"></span>Mayo 1–28</h3>
+        <div class="compare-row"><span class="label">Clientes</span><span class="val">23,149</span></div>
+        <div class="compare-row"><span class="label">Tiquete</span><span class="val">$286,190</span></div>
+        <div class="compare-row"><span class="label">Venta</span><span class="val">$3,420M</span></div>
+      </div>
+      <div class="compare-vs">
+        <div class="compare-vs-badge" style="color:var(--green)">▲ 32.5%</div>
+        <div class="compare-vs-divider"></div>
+        <div class="compare-vs-badge" style="color:var(--green)">▲ 1.7%</div>
+        <div class="compare-vs-divider"></div>
+        <div class="compare-vs-badge" style="color:var(--green)">▲ 26.5%</div>
+      </div>
+      <div class="compare-col abril">
+        <h3>Abril 1–28</h3>
+        <div class="compare-row"><span class="label">Clientes</span><span class="val">17,470</span></div>
+        <div class="compare-row"><span class="label">Tiquete</span><span class="val">$281,536</span></div>
+        <div class="compare-row"><span class="label">Venta</span><span class="val">$2,703M</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE BREAKDOWN -->
+  <div class="zone-section">
+    <div class="section-title"><span class="dot"></span> Desglose por Zona</div>
+    <div class="zone-content">
+      <div class="donut-wrap">
+        <svg viewBox="0 0 200 200" id="donutSvg"></svg>
+        <div class="donut-center">
+          <div class="total">$3,420M</div>
+          <div class="sub">Total</div>
+        </div>
+      </div>
+      <div class="zone-list">
+        <div class="zone-item" style="animation-delay:0.8s">
+          <div class="zone-color" style="background:#FF6B35"></div>
+          <div class="zone-name">Tipi</div>
+          <div class="zone-bar-bg"><div class="zone-bar-fill" style="width:62%;background:#FF6B35;animation-delay:0.9s"></div></div>
+          <div class="zone-amount">$2,117M</div>
+          <div class="zone-pct">62%</div>
+        </div>
+        <div class="zone-item" style="animation-delay:0.9s">
+          <div class="zone-color" style="background:#3B82F6"></div>
+          <div class="zone-name">Attic</div>
+          <div class="zone-bar-bg"><div class="zone-bar-fill" style="width:16%;background:#3B82F6;animation-delay:1s"></div></div>
+          <div class="zone-amount">$542K</div>
+          <div class="zone-pct">16%</div>
+        </div>
+        <div class="zone-item" style="animation-delay:1s">
+          <div class="zone-color" style="background:#10B981"></div>
+          <div class="zone-name">Chispas</div>
+          <div class="zone-bar-bg"><div class="zone-bar-fill" style="width:7%;background:#10B981;animation-delay:1.1s"></div></div>
+          <div class="zone-amount">$240K</div>
+          <div class="zone-pct">7%</div>
+        </div>
+        <div class="zone-item" style="animation-delay:1.1s">
+          <div class="zone-color" style="background:#8B5CF6"></div>
+          <div class="zone-name">Desconocido</div>
+          <div class="zone-bar-bg"><div class="zone-bar-fill" style="width:11%;background:#8B5CF6;animation-delay:1.2s"></div></div>
+          <div class="zone-amount">$380K</div>
+          <div class="zone-pct">11%</div>
+        </div>
+        <div class="zone-item" style="animation-delay:1.2s">
+          <div class="zone-color" style="background:#6B7280"></div>
+          <div class="zone-name">Otros</div>
+          <div class="zone-bar-bg"><div class="zone-bar-fill" style="width:4%;background:#6B7280;animation-delay:1.3s"></div></div>
+          <div class="zone-amount">$141K</div>
+          <div class="zone-pct">4%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stacked bar alternative view -->
+    <div class="stacked-bar-wrap">
+      <div class="stacked-bar">
+        <div class="stacked-segment" style="width:62%;background:#FF6B35;animation-delay:0.8s"></div>
+        <div class="stacked-segment" style="width:16%;background:#3B82F6;animation-delay:0.9s"></div>
+        <div class="stacked-segment" style="width:7%;background:#10B981;animation-delay:1s"></div>
+        <div class="stacked-segment" style="width:11%;background:#8B5CF6;animation-delay:1.1s"></div>
+        <div class="stacked-segment" style="width:4%;background:#6B7280;animation-delay:1.2s"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT CARDS -->
+  <div class="insights-grid">
+    <div class="insight-card">
+      <span class="insight-icon">⭐</span>
+      <div class="insight-label">Mejor Día</div>
+      <div class="insight-value">Sábado 23 Mayo</div>
+      <div class="insight-detail">423 clientes · $61M en ventas</div>
+    </div>
+    <div class="insight-card">
+      <span class="insight-icon">🥧</span>
+      <div class="insight-label">Food vs Bebidas</div>
+      <div class="insight-value">Food 41% / Bebidas 59%</div>
+      <div class="insight-detail">Las bebidas dominan la oferta</div>
+    </div>
+    <div class="insight-card">
+      <span class="insight-icon">📈</span>
+      <div class="insight-label">Tendencia</div>
+      <div class="insight-value">+26.5% vs Abril</div>
+      <div class="insight-detail">Crecimiento sostenido mês a mês</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-text">
+      MIRRIS by Attic & Keller<span class="sep">•</span>Cra 13 #75-51, Bogota<span class="sep">•</span>POS SoftRestaurant
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// ========== COUNTER ANIMATION ==========
+function animateCounters() {
+  const counters = document.querySelectorAll('.counter');
+  counters.forEach(counter => {
+    const target = parseInt(counter.dataset.target);
+    const suffix = counter.dataset.suffix || '';
+    const format = counter.dataset.format || '';
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutExpo(progress);
+      const current = Math.floor(easedProgress * target);
+
+      if (format === 'comma') {
+        counter.textContent = current.toLocaleString('es-CO') + suffix;
+      } else {
+        counter.textContent = current.toLocaleString('es-CO') + suffix;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        counter.textContent = target.toLocaleString('es-CO') + suffix;
+      }
+    }
+
+    requestAnimationFrame(update);
+  });
+}
+
+// ========== DAILY BAR CHART ==========
+function createBarChart() {
+  const data = [
+    { day: 1, value: 46201, label: 'Vie' },
+    { day: 2, value: 39583, label: 'Sáb' },
+    { day: 3, value: 36086, label: 'Dom' },
+    { day: 4, value: 4115, label: 'Lun' },
+    { day: 5, value: 7101, label: 'Mar' },
+    { day: 6, value: 21538, label: 'Mié' },
+    { day: 7, value: 23675, label: 'Jue' },
+    { day: 8, value: 26673, label: 'Vie' },
+    { day: 9, value: 59828, label: 'Sáb' },
+    { day: 10, value: 42382, label: 'Dom' },
+    { day: 11, value: 9169, label: 'Lun' },
+    { day: 12, value: 5715, label: 'Mar' },
+    { day: 13, value: 24408, label: 'Mié' },
+    { day: 14, value: 17787, label: 'Jue' },
+    { day: 15, value: 32322, label: 'Vie' },
+    { day: 16, value: 41737, label: 'Sáb' },
+    { day: 17, value: 42087, label: 'Dom' },
+    { day: 18, value: 16566, label: 'Lun' },
+    { day: 19, value: 7052, label: 'Mar' },
+    { day: 20, value: 10796, label: 'Mié' },
+    { day: 21, value: 12359, label: 'Jue' },
+    { day: 22, value: 46328, label: 'Vie' },
+    { day: 23, value: 61041, label: 'Sáb' },
+    { day: 24, value: 34746, label: 'Dom' },
+    { day: 25, value: 12012, label: 'Lun' },
+    { day: 26, value: 1919, label: 'Mar' }
+  ];
+
+  const maxVal = Math.max(...data.map(d => d.value));
+  const container = document.getElementById('barsContainer');
+
+  data.forEach((d, i) => {
+    const isFriSat = d.label === 'Vie' || d.label === 'Sáb';
+    const color = isFriSat ? '#FF6B35' : '#3B82F6';
+    const heightPct = (d.value / maxVal) * 100;
+    const delay = 0.5 + (i * 0.04);
+
+    const group = document.createElement('div');
+    group.className = 'bar-group';
+
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = heightPct + '%';
+    bar.style.background = `linear-gradient(to top, ${color}, ${color}dd)`;
+    bar.style.animation = `growBar 0.8s cubic-bezier(0.22,1,0.36,1) ${delay}s both`;
+    bar.style.transformOrigin = 'bottom';
+    bar.setAttribute('data-value', '$' + (d.value / 1000).toFixed(0) + 'K');
+
+    const label = document.createElement('div');
+    label.className = 'bar-label';
+    label.textContent = d.day;
+
+    group.appendChild(bar);
+    group.appendChild(label);
+    container.appendChild(group);
+  });
+}
+
+// Fix growBar for vertical bars - need scaleY, not scaleX
+// Override: bars grow from bottom using scaleY
+const barStyle = document.createElement('style');
+barStyle.textContent = `
+  .bar {
+    animation-name: growBarV !important;
+  }
+  @keyframes growBarV {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+`;
+document.head.appendChild(barStyle);
+
+// ========== DONUT CHART ==========
+function createDonut() {
+  const zones = [
+    { name: 'Tipi', pct: 62, color: '#FF6B35' },
+    { name: 'Attic', pct: 16, color: '#3B82F6' },
+    { name: 'Chispas', pct: 7, color: '#10B981' },
+    { name: 'Desconocido', pct: 11, color: '#8B5CF6' },
+    { name: 'Otros', pct: 4, color: '#6B7280' }
+  ];
+
+  const svg = document.getElementById('donutSvg');
+  const cx = 100, cy = 100, r = 80;
+  const circumference = 2 * Math.PI * r;
+  let offset = 0;
+
+  zones.forEach((zone, i) => {
+    const dashLen = (zone.pct / 100) * circumference;
+    const gap = circumference - dashLen;
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', cx);
+    circle.setAttribute('cy', cy);
+    circle.setAttribute('r', r);
+    circle.setAttribute('fill', 'none');
+    circle.setAttribute('stroke', zone.color);
+    circle.setAttribute('stroke-width', '24');
+    circle.setAttribute('stroke-dasharray', `${dashLen} ${gap}`);
+    circle.setAttribute('stroke-dashoffset', -offset);
+    circle.style.setProperty('--circumference', circumference);
+    circle.style.setProperty('--offset', -offset);
+    circle.style.animation = `donutFill 1s cubic-bezier(0.22,1,0.36,1) ${0.8 + i * 0.15}s both`;
+    // Animate by going from full circumference offset to actual
+    circle.style.strokeDashoffset = -offset;
+    // Custom: animate from hidden to visible
+    const startOffset = circumference + offset;
+    circle.style.strokeDashoffset = startOffset;
+    const endOffset = -offset + 0; // no dashoffset needed for visible
+    circle.animate([
+      { strokeDashoffset: startOffset },
+      { strokeDashoffset: -offset }
+    ], {
+      duration: 1000,
+      easing: 'cubic-bezier(0.22,1,0.36,1)',
+      delay: (0.8 + i * 0.15) * 1000,
+      fill: 'forwards'
+    });
+
+    svg.appendChild(circle);
+    offset += dashLen;
+  });
+}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', () => {
+  createBarChart();
+  createDonut();
+  setTimeout(animateCounters, 400);
+});
+</script>
+</body>
+</html>
